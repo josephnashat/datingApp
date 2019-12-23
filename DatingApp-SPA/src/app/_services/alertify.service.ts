@@ -18,12 +18,20 @@ export class AlertifyService {
   message(message: string) {
     alertify.message(message);
   }
-  confirm(message: string, okCallback: () => any) {
-    alertify.confirm(message, (e: any) => {
-      if (e) {
-        okCallback();
-      } else {
-      }
-    });
+
+  confirm(
+    message: string,
+    okCallback: () => any,
+    title = "Confirm",
+    cancelCallBack = () => {}
+  ) {
+    alertify.confirm(title, message, okCallback, cancelCallBack);
+    // alertify.confirm(message, (e: any) => {
+    //   if (e) {
+    //     okCallback();
+    //   } else {
+    //     console.log(e);
+    //   }
+    // });
   }
 }
