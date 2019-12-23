@@ -32,13 +32,17 @@ namespace DatingApp.API.Controllers
         {
             //if(!ModelState.IsValid) validation as well as [Frombody] attribute handled by APIController attribute
             registeredUserDto.Username = registeredUserDto.Username.Trim().ToLower();
-            if (await _repo.UserExists(registeredUserDto.Username)) return BadRequest("User already exists");
-            var userToCreate = new User
-            {
-                Username = registeredUserDto.Username
-            };
+
+            if (await _repo.UserExists(registeredUserDto.Username))
+                return BadRequest("User already exists");
+
+            var userToCreate = _mapper.Map<User>(registeredUserDto);
+
             var createdUser = await _repo.Register(userToCreate, registeredUserDto.Password);
-            return StatusCode(201);
+
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
+            
+            return CreatedAtRoute("GetUser", new { controller = "users", id = userToReturn.Id }, userToReturn);
         }
 
         [HttpPost("login")]
